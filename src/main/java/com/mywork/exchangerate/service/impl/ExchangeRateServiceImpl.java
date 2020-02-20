@@ -23,7 +23,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 	@Autowired
 	IExchangeRateDao exchangeRateDao;
 
-	public ExchangeRate getTodaysExRate() {
+	public List<ExchangeRate> getTodaysExRate() {
 		List<ExchangeRate> exRates = new ArrayList<>();
 		ResponseEntity<ExchangeRateDto> res = restTemplate.getForEntity("https://api.exchangeratesapi.io/2010-01-12",
 				ExchangeRateDto.class);
@@ -33,10 +33,20 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 					res.getBody().getBase());
 			exRates.add(ex);
 		}
-		exchangeRateDao.saveAll(exRates);
-
-		return null;
+		
+		return exRates;
 
 	}
+	
+	
+	public ResponseEntity<ExchangeRateDto> getExRateForDate(String date) {
+		return restTemplate.getForEntity("https://api.exchangeratesapi.io/" + date, ExchangeRateDto.class);
+	}
+
+	@Override
+	public Iterable<ExchangeRate> saveExchangeRate(List<ExchangeRate> exchangeRates) {
+		return exchangeRateDao.saveAll(exchangeRates);
+	}
+
 
 }

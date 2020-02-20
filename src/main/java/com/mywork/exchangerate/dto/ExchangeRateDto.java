@@ -12,6 +12,16 @@ public class ExchangeRateDto {
 	public ExchangeRateDto() {
 		super();
 	}
+	
+	
+	public ExchangeRateDto(String base, Date date, Map<String, Double> rates) {
+		super();
+		this.base = base;
+		this.date = date;
+		this.rates = rates;
+	}
+
+
 	public String getBase() {
 		return base;
 	}

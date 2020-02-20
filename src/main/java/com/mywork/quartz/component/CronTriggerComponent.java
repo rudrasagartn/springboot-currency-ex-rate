@@ -29,10 +29,14 @@ public class CronTriggerComponent {
 	@Bean
 	public Date initJob(@Value("${TodaysExRateJob.cron.expression}") String cronExp) throws SchedulerException {
 		Scheduler sched = schedulerFactory.getScheduler();
-		JobDetail job = JobBuilder.newJob(TodaysExRateJob.class).withIdentity("TodaysExRateJob", "ExchangeRate").build();
+		JobDetail job = JobBuilder.newJob(TodaysExRateJob.class).withIdentity("TodaysExRateJob", "ExchangeRate")
+				.build();
 
 		CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity("TodaysExRateTrigger", "ExchangeRate")
 				.withSchedule(CronScheduleBuilder.cronSchedule(cronExp)).build();
+		if (sched.checkExists(job.getKey())) {
+			sched.deleteJob(job.getKey());
+		}
 
 		return sched.scheduleJob(job, trigger);
 	}
